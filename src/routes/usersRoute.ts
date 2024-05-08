@@ -1,9 +1,10 @@
 import { signIn, signUp } from "@/controllers/users.controller";
-import { sign } from "crypto";
+import { joiValidation } from "@/middlewares/joi.middleware";
+import { authenticateToken } from "@/middlewares/validateSchema";
 import { Router } from "express";
 
 export const userRouter = Router();
 
-userRouter.post("/sign-up", signUp);
-userRouter.post("/sign-in", signIn);
-userRouter.get("/categories-count")
+userRouter.post("/sign-up", joiValidation.signUp, signUp);
+userRouter.post("/sign-in", joiValidation.signIn, signIn);
+userRouter.get("/categories-count", authenticateToken)

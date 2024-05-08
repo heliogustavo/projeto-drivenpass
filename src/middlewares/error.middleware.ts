@@ -51,7 +51,7 @@ export async function errorHandler(error: ErrorObject, _req: Request, res: Respo
     }
 
     return res.sendStatus(500);
-}
+}                                          
 
 export class ErrorInfo {
   type: ErrorType;
