@@ -1,14 +1,14 @@
-import { NextFunction, Request, Response } from 'express';
-import httpStatus from 'http-status';
-import { ObjectSchema } from 'joi';
+import { Request, Response, NextFunction } from "express";
+import jwt  from "jsonwebtoken";
+import { ErrorInfo } from "./error.middleware";
 
-export function validateSchemaMiddleware(schema: ObjectSchema) {
-  return (req: Request, res: Response, next: NextFunction) => {
-    const validation = schema.validate(req.body);
-    if (validation.error) {
-      return res.status(httpStatus.UNPROCESSABLE_ENTITY).send({ error: validation.error.message });
-    }
-
-    next();
-  };
-}
+export async function authenticateToken (req: Request, res: Response, next: NextFunction){
+    const { authorization } = req.headers;
+    const token : string | undefined = authorization?.replace('Bearer ', '');
+    if(!token) throw new ErrorInfo("error_unauthorized", "This request doesn't have any token");
+    jwt.verify(token!, process.env.ACCESS_TOKEN_SECRET!, (err, id) => {
+        if(err) throw new ErrorInfo("error_unauthorized", "This request doesn't have a valid token");
+        res.locals.userId = id;
+        next();
+    });
+}; 
