@@ -1,8 +1,11 @@
+import { ISignUp } from "../interfaces/usersInterface";
 import { ErrorInfo } from "../middlewares/error.middleware"
 import * as userRepository from "../repositories/usersRepository"
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { CategoryCount, TokenConfig } from "../types/usersTypes";
 import { User } from "@prisma/client";
+import { credentialTitles } from "../repositories/credentialsRepository";
 
 
 export async function checkEmail (email: string, method: "sign-in" | "sign-up" ) : Promise<User | undefined>{
@@ -19,14 +22,14 @@ export async function doesPasswordMatch(password: string, confirmPassword: strin
 };
 
 
-export async function archiveAccount (account: any) : Promise<User>{
+export async function archiveAccount (account: ISignUp) : Promise<User>{
     delete account.confirmPassword
-    const accountWithHashedPassword = await hashUserPassword(account);
+    const accountWithHashedPassword : ISignUp = await hashUserPassword(account);
     const response : User = await userRepository.create(accountWithHashedPassword);
     return response;
 };
 
-async function hashUserPassword (account: any){
+async function hashUserPassword (account: ISignUp) : Promise<ISignUp>{
     const hashPassword : string = bcrypt.hashSync(account.password, 10);
     account.password = hashPassword
     return account
@@ -46,3 +49,11 @@ export async function generateToken(id: string) {
     }
     return config
 };
+
+export async function handleEachSum ( userId: string) : Promise<CategoryCount>{
+ const credentials  = await credentialTitles(userId);
+
+ return [
+    {title: "Credentials", quantity: credentials.length},
+]
+}

@@ -1,7 +1,7 @@
-import { signIn, signUp } from "@/controllers/users.controller";
-import { joiValidation } from "@/middlewares/joi.middleware";
-import { authenticateToken } from "@/middlewares/validateSchema";
 import { Router } from "express";
+import { signIn, signUp } from "../controllers/users.controller";
+import { joiValidation } from "../middlewares/joi.middleware";
+import { authenticateToken } from "../middlewares/validateSchema";
 
 export const userRouter = Router();
 

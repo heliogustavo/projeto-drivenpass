@@ -1,6 +1,7 @@
 import client from "../database/prisma";
+import { ISignUp } from "../interfaces/usersInterface";
 
-export async function create (account: any){
+export async function create (account: ISignUp){
     const response = await client.user.create({
         data: account
     });
