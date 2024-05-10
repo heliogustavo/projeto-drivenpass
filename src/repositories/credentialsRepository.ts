@@ -1,5 +1,7 @@
 import { Credential } from "@prisma/client";
 import client from "../database/prisma";
+import { IInsertCredential } from "../interfaces/credentialInterface";
+import { TitlesList } from "../types/usersTypes";
 
 
 export async function checkThisTitle(title: string, userId:string){
@@ -14,7 +16,7 @@ export async function checkThisTitle(title: string, userId:string){
     return response
 };
 
-export async function insertData (credential: any){
+export async function insertData (credential: IInsertCredential){
     await client.credential.create({
         data: credential
     });  
@@ -30,7 +32,7 @@ export async function searchById(id:string){
 };
 
 export async function credentialTitles(userId: string){
-    const response = await client.credential.findMany({
+    const response : TitlesList | null= await client.credential.findMany({
         where:{
             userId : userId
         }, 

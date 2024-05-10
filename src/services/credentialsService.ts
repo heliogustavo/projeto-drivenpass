@@ -1,11 +1,13 @@
 import { Credential } from "@prisma/client";
+import { ICredentialRequest, IInsertCredential } from "../interfaces/credentialInterface";
 import { ErrorInfo } from "../middlewares/error.middleware";
 import * as credentialRepository from "../repositories/credentialsRepository";
-import * as userValidator from "../utils/validators/usersValidators";
-import { securityUtils } from "../utils/handlers/securityHandlers";
+import * as userValidator from "../Common/validators/usersValidators"
+import { securityUtils } from "../Common/handlers/securityHandlers";
+import { TitlesList } from "../types/usersTypes";
 
 export async function getAllCredentials (userId: string){
-    const response = await credentialRepository.credentialTitles(userId)
+    const response: TitlesList| null = await credentialRepository.credentialTitles(userId)
     return response
 };
 
@@ -16,15 +18,15 @@ export async function getCredentialById (userId: string, id: string){
     return decryptedCredential;
 };
 
-export async function createCredential(request: any, userId: string){
-    const credential  = {...request, userId};
+export async function createCredential(request: ICredentialRequest, userId: string){
+    const credential : IInsertCredential = {...request, userId};
     const encryptedCredential = await securityUtils.encryptObjectPassword(credential);
-    await credentialRepository.insertData(encryptedCredential);
+    await credentialRepository.insertData(encryptedCredential as IInsertCredential);
 };
 
 export async function validateTitle(title: string, userId: string){
     const validation : Credential | null = await credentialRepository.checkThisTitle(title, userId)
-    if(validation) throw new ErrorInfo("error_conflict", "Ja existe uma credencial com esse nome")
+    if(validation) throw new ErrorInfo("error_conflict", "You already have a title like this")
 }
 
 export async function deleteCredentialById(userId:string, id: string){
@@ -35,7 +37,7 @@ export async function deleteCredentialById(userId:string, id: string){
 
 async function ensureCredentialExists(id: string){
     const credential: Credential | null = await credentialRepository.searchById(id);
-    if(!credential) throw new ErrorInfo("error_not_found", "Essa credencial não existe");
+    if(!credential) throw new ErrorInfo("error_not_found", "This credential doesn't exists");
     return credential;
 };
 
