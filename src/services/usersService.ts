@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 import { CategoryCount, TokenConfig } from "../types/usersTypes";
 import { User } from "@prisma/client";
 import { credentialTitles } from "../repositories/credentialsRepository";
+import { networkTitles } from "../repositories/networkRepository";
 
 
 export async function checkEmail (email: string, method: "sign-in" | "sign-up" ) : Promise<User | undefined>{
@@ -51,9 +52,11 @@ export async function generateToken(id: string) {
 };
 
 export async function handleEachSum ( userId: string) : Promise<CategoryCount>{
- const credentials  = await credentialTitles(userId);
-
- return [
-    {title: "Credentials", quantity: credentials.length},
-]
-}
+    const credentials  = await credentialTitles(userId);
+    const networks  = await networkTitles(userId);
+   
+    return [
+       {title: "Credentials", quantity: credentials.length},
+       {title: "WiFi Passwords", quantity: networks.length},
+   ]
+   }
