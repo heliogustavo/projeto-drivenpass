@@ -16,7 +16,7 @@ export const joiValidation = {
         const validation = signInSchema.validate(request, {abortEarly: false});
         if(validation.error) throw new ErrorInfo("error_unprocessable_entity", validation.error.message);
         next();
-    },
+    }, 
     
     createCredential:(req: Request, _res:Response, next: NextFunction) =>{
         const request = req.body;
