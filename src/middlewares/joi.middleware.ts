@@ -9,6 +9,7 @@ export const joiValidation = {
         const request = req.body;
         const validation = signUpSchema.validate(request, {abortEarly: false});
         if(validation.error) throw new ErrorInfo("error_unprocessable_entity", validation.error.message);
+        console.log('passou pelo joi validation')
         next();
     },
     signIn: (req: Request, _res:Response, next: NextFunction) => {

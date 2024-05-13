@@ -6,6 +6,7 @@ import { CategoryCount, TokenConfig } from "../types/usersTypes";
 
 
 export async function signUp(req: Request, res: Response){
+    console.log('passei aqui')
     const request : ISignUp = req.body;
     await userService.doesPasswordMatch(request.password, request.confirmPassword!);
     await userService.checkEmail(request.email, "sign-up");
