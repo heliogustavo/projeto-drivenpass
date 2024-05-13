@@ -6,7 +6,6 @@ import { CategoryCount, TokenConfig } from "../types/usersTypes";
 
 
 export async function signUp(req: Request, res: Response){
-    console.log('passei aqui')
     const request : ISignUp = req.body;
     await userService.doesPasswordMatch(request.password, request.confirmPassword!);
     await userService.checkEmail(request.email, "sign-up");
@@ -19,7 +18,6 @@ export async function signIn(req: Request, res: Response){
     const account : User | undefined = await userService.checkEmail(request.email, "sign-in");
     await userService.comparePassword(request.password, account!.password)
     const config = await userService.generateToken(account!.id);
-    console.log(config)
     return res.status(200).send({message: `Success. You will be redirected to the home page`, config: config})
 };
 

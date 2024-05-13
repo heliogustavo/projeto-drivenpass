@@ -14,10 +14,9 @@ describe('Testes de Controladores', () => {
   it('deve criar uma nova conta com sucesso', async () => {
     const signUpResponse = await request(app).post('/users/sign-up').send({
       email: 'example@example.com',
-      password: 'password123'
+      password: 'password123',
+      confirmPassword: 'password123'
     });
-    
-    
 
     expect(signUpResponse.status).toBe(201);
     expect(signUpResponse.body).toEqual({ message: 'Succesfull. Your account has been created' });

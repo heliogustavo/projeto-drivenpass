@@ -21,7 +21,6 @@ interface ErrorInterface {
 
 export async function errorHandler(error: ErrorObject, _req: Request, res: Response, _next: NextFunction){
     const {type, message} = error;
-  console.log(error)
     const Errors: ErrorInterface = {
         error_bad_request: {
           status: 400,
@@ -47,17 +46,16 @@ export async function errorHandler(error: ErrorObject, _req: Request, res: Respo
       };
     if(Errors[type]?.status){
         const {status} = Errors[type];
-        return res.status(status).send(message);
+        return res.status(status).send({"mensagem de erro":message});
     }
 
     return res.sendStatus(500);
 }                                          
 
-export class ErrorInfo {
+export class ErrorInfo extends Error {
   type: ErrorType;
-  message: string;
-  constructor(errorType: ErrorType, message: string){
+  constructor(errorType: ErrorType, message: string) {
+    super(message);
     this.type = errorType;
-    this.message = message;
   }
 }
