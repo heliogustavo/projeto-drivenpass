@@ -28,7 +28,7 @@ model Credential {
   created_at DateTime @default(now())
   User       User     @relation(fields: [userId], references: [id])
 
-  @@unique([userId, title])
+  @@unique([ title])
   @@map("credentials")
 }
 

@@ -1,4 +1,6 @@
 import { ErrorRequestHandler, Request, Response, NextFunction } from "express";
+//import  {stripHtml}  from "string-strip-html";
+
 
 export type ErrorType = 
     | "error_bad_request"
@@ -46,7 +48,7 @@ export async function errorHandler(error: ErrorObject, _req: Request, res: Respo
       };
     if(Errors[type]?.status){
         const {status} = Errors[type];
-        return res.status(status).send({"mensagem de erro":message});
+        return res.status(status).send(message);
     }
 
     return res.sendStatus(500);

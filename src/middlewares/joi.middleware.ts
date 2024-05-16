@@ -22,7 +22,7 @@ export const joiValidation = {
         const request = req.body;
         const validation = credentialSchema.validate(request, {abortEarly: false});
         if(validation.error) {
-            console.log(validation.error.details[0].message)
+            //console.log(validation.error.details[0].message)
             throw new ErrorInfo("error_unprocessable_entity", validation.error.details[0].message);
         }
         next();

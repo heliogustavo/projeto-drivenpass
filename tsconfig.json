@@ -1,15 +1,15 @@
 {
   "compilerOptions": {
-    "target": "es2016",                            
-    "module": "Node16",                   
-    "esModuleInterop": true,                           
-    "forceConsistentCasingInFileNames": true,            
-    "strict": true,                                    
+    "target": "es2016",
+    "module": "Node16",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
     "skipLibCheck": true,
     "outDir": "./dist",
     "typeRoots": ["node_modules/@types"],
     "moduleResolution": "Node16",
-		"baseUrl": "./"      
-  },
-  
+    "baseUrl": "./",
+    "noEmit": false
+  }
 }
