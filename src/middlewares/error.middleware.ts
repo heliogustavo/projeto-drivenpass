@@ -18,7 +18,7 @@ interface ErrorObject extends ErrorRequestHandler {
   }
 
 interface ErrorInterface { 
-    [errorType : string] : {status : number}
+  [errorType: string]: { status: number, message?: string }
 }
 
 export async function errorHandler(error: ErrorObject, _req: Request, res: Response, _next: NextFunction){
@@ -28,7 +28,7 @@ export async function errorHandler(error: ErrorObject, _req: Request, res: Respo
           status: 400,
         },
         error_unauthorized: {
-          status: 401,
+          status: 401,          
         },
         error_forbidden: {
           status: 403,
