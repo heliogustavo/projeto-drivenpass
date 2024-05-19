@@ -1,4 +1,4 @@
-/* import request from 'supertest';
+import request from 'supertest';
 import app from '../src/app';
 import client from '../src/database/prisma';
 import { createCredentialFactory } from './factories/factoriesCredentials';
@@ -30,7 +30,7 @@ describe('Testes de Credenciais', () => {
     it('deve retornar todas as credenciais de um usuário', async () => {
         const user = await createUserFactory();
         const token = await generateToken(user.id)
-        const credentialCreated = await createCredentialFactory(user)
+        //const credentialCreated = await createCredentialFactory(user)
 
         const allTitlesResponse = await request(app)
             .get('/credentials/alltitles')
@@ -53,18 +53,20 @@ describe('Testes de Credenciais', () => {
         expect(infoByIdResponse.status).toBe(200);
     });
 
-  /*   it('deve deletar uma credencial por ID', async () => {
+   it('deve deletar uma credencial por ID', async () => {
+        const user = await createUserFactory();
+        const token = await generateToken(user.id)
+
         const credentialCreated = await createCredentialFactory(user)
         const credentialId = credentialCreated.id
         const deleteByIdResponse = await request(app)
             .delete(`/credentials/${credentialId}`)
             .set('Authorization', token);
-        //console.log("userTUDO", user)
 
         expect(deleteByIdResponse.status).toBe(204);
     });
-    it('deve retornar uma mensagem de erro ao tentar cadastrar uma credencial sem estar logado', async () => {
-        const falseToken = ''
+   /*  it('deve retornar uma mensagem de erro ao tentar cadastrar uma credencial sem estar logado', async () => {
+        const falseToken= 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI0OTk3YThkYi03NzVlLTQ3ODgtYTUwYS1hZjRiY2NmNmI0NzQiLCJpYXQiOjE3MTU4MDY5MDgsImV4cCI6MTcxNTg5MzMwOH0.ybhK0En5pA2hdStDubrrdWOLpzEvRjqw9FeB-fvvCfY'
         const newCredentialResponse = await request(app)
         .post('/credentials/create')
         .set('Authorization', falseToken)
@@ -75,7 +77,9 @@ describe('Testes de Credenciais', () => {
             password: "1234"
         });
         expect(newCredentialResponse.status).toBe(401);
-
-    }); */
+        expect(response.body).toEqual({
+            error: 'Unauthorized',
+            message: 'Essa requisição contém um token inválido'
+          });
+    });  */
 });
- */

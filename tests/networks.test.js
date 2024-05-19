@@ -1,41 +1,67 @@
 /* import request from 'supertest';
-import { app } from '../src/app';
-import { client } from '../src/repository';
-import { title } from 'process';
+import app from '../src/app';
+import Cryptr from 'cryptr';
+import client from '../src/database/prisma';
+import { createUserFactory, generateToken } from './factories/factoriesUsers';
+import { createNetworkFactory } from './factories/factoriesNetwork';
 
-describe('Testes de Controladores de Networks', () => {
-    beforeAll(async () => {
+describe('Testes EndPoints de Networks', () => {
+    beforeEach(async () => {
         await client.network.deleteMany();
-    });
+        await client.user.deleteMany();
+    })
 
-    afterAll(async () => {
-        await client.network.deleteMany();
-    });
-
-    it('deve retornar todas as networks de um usuário', async () => {
-        const signUpResponse = await request(app)
-            .post('/signup')
-            .send({
-                //irfor de login
-            });
+    it('deve criar uma nova network com sucesso', async () => {
+        const cryptr = new Cryptr(process.env.CRYPTR_SECRET)
+        const user = await createUserFactory();
+        const token = await generateToken(user.id)
 
         const newNetworkResponse = await request(app)
-            .post('/networks/new-network')
-            .set('Authorization', `Bearer ${signUpResponse.body.config.token}`)
+            .post('/networks/create')
+            .set('Authorization', token)
             .send({
                 title: 'wifi',
                 network: 'wi-fi de casa',
-                password: 'testPassword',
-                id: '1'
+                password: cryptr.encrypt("1234")
             });
+        expect(newNetworkResponse.status).toBe(201);
+        expect(newNetworkResponse.text).toBe('Sucessfull');
+    });
+    it('deve retornar todas as networks de um usuário', async () => {
+        const user = await createUserFactory();
+        const token = await generateToken(user.id)
 
         const allTitlesResponse = await request(app)
-            .get('/networks/all-titles')
-            .set('Authorization', `Bearer ${signUpResponse.body.config.token}`);
+            .get('/networks/alltitles')
+            .set('Authorization', token)
 
         expect(allTitlesResponse.status).toBe(200);
+
+    });
+    it('deve retornar informações de uma network por ID', async () => {
+        const user = await createUserFactory();
+        const token = await generateToken(user.id)
+        const networkCreated = await createNetworkFactory(user.id)
+        const networkId = networkCreated.id
+
+        const infoByIdResponse = await request(app)
+            .get(`/networks/${networkId}`)
+            .set('Authorization', token);
+
+        expect(infoByIdResponse.status).toBe(200);
     });
 
+    it('deve deletar uma network por ID', async () => {
+        const user = await createUserFactory();
+        const token = await generateToken(user.id)
+        const networkCreated = await createNetworkFactory(user.id)
+        const networkId = networkCreated.id
 
-});
- */
+        const deleteByIdResponse = await request(app)
+            .delete(`/networks/${networkId}`)
+            .set('Authorization', token);
+
+        expect(deleteByIdResponse.status).toBe(204);
+    });
+
+}); */

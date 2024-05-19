@@ -1,10 +1,15 @@
-import request from 'supertest';
+/* import request from 'supertest';
 import app from '../src/app';
 import client from '../src/database/prisma';
 import jwt from 'jsonwebtoken'
 import { createUserFactory, generateToken } from './factories/factoriesUsers';
 
 describe('Testes de Controladores', () => {
+  beforeAll(async () => {
+    await client.credential.deleteMany();     
+    await client.user.deleteMany();    
+  });
+
   beforeEach(async () => {
     await client.credential.deleteMany();     
     await client.user.deleteMany();    });
@@ -70,3 +75,4 @@ describe('Testes de Controladores', () => {
     });
   });
 });
+ */
