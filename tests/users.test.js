@@ -1,19 +1,14 @@
-/* import request from 'supertest';
+import request from 'supertest';
 import app from '../src/app';
 import client from '../src/database/prisma';
 import jwt from 'jsonwebtoken'
 import { createUserFactory, generateToken } from './factories/factoriesUsers';
 
 describe('Testes de Controladores', () => {
-  beforeAll(async () => {
-    await client.credential.deleteMany();     
-    await client.user.deleteMany();    
-  });
 
   beforeEach(async () => {
-    await client.credential.deleteMany();     
-    await client.user.deleteMany();    });
-
+    await client.$queryRaw`TRUNCATE TABLE "users" CASCADE`;
+})
   it('deve criar uma nova conta com sucesso', async () => {
     const signUpResponse = await request(app)
       .post('/users/sign-up')
@@ -36,9 +31,6 @@ describe('Testes de Controladores', () => {
         email: user.email,
         password: 'password123'
       });
-      console.log("signInResponse", signInResponse.error)
-      console.log(signInResponse.body)
-      console.log(signInResponse.status)
     expect(signInResponse.status).toBe(200);
     expect(signInResponse.body).toHaveProperty('message', 'Success. You will be redirected to the home page');
     expect(signInResponse.body).toHaveProperty('config');
@@ -59,7 +51,7 @@ describe('Testes de Controladores', () => {
     ]);
   });
 
-  it('retornar erro 401 para token inválido', async () => {
+   /* it('retornar erro 401 para token inválido', async () => {
     const user = await createUserFactory();
     const token = await generateToken(user.id)
     const tokenFalso= 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI0OTk3YThkYi03NzVlLTQ3ODgtYTUwYS1hZjRiY2NmNmI0NzQiLCJpYXQiOjE3MTU4MDY5MDgsImV4cCI6MTcxNTg5MzMwOH0.ybhK0En5pA2hdStDubrrdWOLpzEvRjqw9FeB-fvvCfY'
@@ -73,6 +65,5 @@ describe('Testes de Controladores', () => {
       error: 'Unauthorized',
       message: 'Essa requisição contém um token inválido'
     });
-  });
+  });  */
 });
- */

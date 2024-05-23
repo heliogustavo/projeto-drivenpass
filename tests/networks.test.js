@@ -1,18 +1,17 @@
-/* import request from 'supertest';
+import request from 'supertest';
 import app from '../src/app';
 import Cryptr from 'cryptr';
 import client from '../src/database/prisma';
-import { createUserFactory, generateToken } from './factories/factoriesUsers';
+import { generateToken } from './factories/factoriesUsers';
+import { createUserFactory } from './factories/factoriesUsers';
 import { createNetworkFactory } from './factories/factoriesNetwork';
 
 describe('Testes EndPoints de Networks', () => {
     beforeEach(async () => {
-        await client.network.deleteMany();
-        await client.user.deleteMany();
+        await client.$queryRaw`TRUNCATE TABLE "networks" CASCADE`;
+        await client.$queryRaw`TRUNCATE TABLE "users" CASCADE`;
     })
-
     it('deve criar uma nova network com sucesso', async () => {
-        const cryptr = new Cryptr(process.env.CRYPTR_SECRET)
         const user = await createUserFactory();
         const token = await generateToken(user.id)
 
@@ -22,8 +21,9 @@ describe('Testes EndPoints de Networks', () => {
             .send({
                 title: 'wifi',
                 network: 'wi-fi de casa',
-                password: cryptr.encrypt("1234")
+                password: "1234"
             });
+            //console.log(newNetworkResponse.error)
         expect(newNetworkResponse.status).toBe(201);
         expect(newNetworkResponse.text).toBe('Sucessfull');
     });
@@ -64,4 +64,4 @@ describe('Testes EndPoints de Networks', () => {
         expect(deleteByIdResponse.status).toBe(204);
     });
 
-}); */
+});

@@ -17,6 +17,7 @@ export async function checkThisTitle(title: string, userId:string){
 };
 
 export async function insertData (credential: IInsertCredential){
+    console.log("credentialData", credential)
     await client.credential.create({
         data: credential
     });  

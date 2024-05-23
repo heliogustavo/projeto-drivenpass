@@ -12,8 +12,10 @@ app.use(express.json());
 app.use(cors());
 app.use(router);
 
-app.listen(process.env.PORT || 5000, 
-    ()=>{console.log(`Listening  at ${process.env.PORT}`)
-});
+if (process.env.NODE_ENV !== "TEST") {
+  app.listen(process.env.PORT || 5000, () => {
+    console.log(`Listening at ${process.env.PORT}`);
+  });
+}
                              
 export default app;

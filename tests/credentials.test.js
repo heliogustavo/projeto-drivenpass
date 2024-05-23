@@ -3,18 +3,19 @@ import app from '../src/app';
 import client from '../src/database/prisma';
 import { createCredentialFactory } from './factories/factoriesCredentials';
 import { createUserFactory, generateToken } from './factories/factoriesUsers';
-import Cryptr from 'cryptr';
+
 describe('Testes de Credenciais', () => {
-    
-      beforeEach(async () => {
-        await client.credential.deleteMany();     
-        await client.user.deleteMany();     
+    //criar user global e apagar ele por id em cada arquivo.test
+    beforeEach(async () => {
+        await client.$queryRaw`TRUNCATE TABLE "credentials" CASCADE`;
+        await client.$queryRaw`TRUNCATE TABLE "users" CASCADE`;
     })
-      
+    
+    
     it('deve criar uma nova credencial com sucesso', async () => {
-        const cryptr = new Cryptr(process.env.CRYPTR_SECRET)
         const user = await createUserFactory();
         const token = await generateToken(user.id)
+        console.log("token", token)
         const newCredentialResponse = await request(app)
             .post('/credentials/create')
             .set('Authorization', token)
@@ -22,7 +23,7 @@ describe('Testes de Credenciais', () => {
                 title: "facebook",
                 url: "https://www.facebook.com",
                 username: "nometeste",
-                password: cryptr.encrypt("1234"),
+                password: "1234",
             });
         expect(newCredentialResponse.status).toBe(201);
         expect(newCredentialResponse.text).toBe('Sucessfull');
@@ -30,7 +31,6 @@ describe('Testes de Credenciais', () => {
     it('deve retornar todas as credenciais de um usuário', async () => {
         const user = await createUserFactory();
         const token = await generateToken(user.id)
-        //const credentialCreated = await createCredentialFactory(user)
 
         const allTitlesResponse = await request(app)
             .get('/credentials/alltitles')
@@ -47,13 +47,13 @@ describe('Testes de Credenciais', () => {
         const credentialId = credentialCreated.id
 
         const infoByIdResponse = await request(app)
-        .get(`/credentials/${credentialId}`)
-        .set('Authorization', token);
+            .get(`/credentials/${credentialId}`)
+            .set('Authorization', token);
 
         expect(infoByIdResponse.status).toBe(200);
     });
 
-   it('deve deletar uma credencial por ID', async () => {
+    it('deve deletar uma credencial por ID', async () => {
         const user = await createUserFactory();
         const token = await generateToken(user.id)
 
@@ -65,21 +65,24 @@ describe('Testes de Credenciais', () => {
 
         expect(deleteByIdResponse.status).toBe(204);
     });
-   /*  it('deve retornar uma mensagem de erro ao tentar cadastrar uma credencial sem estar logado', async () => {
-        const falseToken= 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI0OTk3YThkYi03NzVlLTQ3ODgtYTUwYS1hZjRiY2NmNmI0NzQiLCJpYXQiOjE3MTU4MDY5MDgsImV4cCI6MTcxNTg5MzMwOH0.ybhK0En5pA2hdStDubrrdWOLpzEvRjqw9FeB-fvvCfY'
+/* 
+    it('deve retornar uma mensagem de erro ao tentar cadastrar uma credencial sem estar logado', async () => {
+        const cryptr = new Cryptr(process.env.CRYPTR_SECRET)
+        const falseToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI0OTk3YThkYi03NzVlLTQ3ODgtYTUwYS1hZjRiY2NmNmI0NzQiLCJpYXQiOjE3MTU4MDY5MDgsImV4cCI6MTcxNTg5MzMwOH0.ybhK0En5pA2hdStDubrrdWOLpzEvRjqw9FeB-fvvCfY'
         const newCredentialResponse = await request(app)
-        .post('/credentials/create')
-        .set('Authorization', falseToken)
-        .send({
-            title: "youtube",
-            url: "https://www.youtube.com",
-            username: "nometeste",
-            password: "1234"
-        });
+            .post('/credentials/create')
+            .set('Authorization', falseToken)
+            .send({
+                title: "youtube",
+                url: "https://www.youtube.com",
+                username: "nometeste",
+                password: cryptr.encrypt("1234"),
+            });
         expect(newCredentialResponse.status).toBe(401);
         expect(response.body).toEqual({
             error: 'Unauthorized',
             message: 'Essa requisição contém um token inválido'
-          });
-    });  */
+        });
+    }); */
+
 });
