@@ -3,10 +3,11 @@ import app from '../src/app';
 import client from '../src/database/prisma';
 import { createCredentialFactory } from './factories/factoriesCredentials';
 import { createUserFactory, generateToken } from './factories/factoriesUsers';
+import Cryptr from 'cryptr';
 
 describe('Testes de Credenciais', () => {
-    //criar user global e apagar ele por id em cada arquivo.test
     beforeEach(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 350));
         await client.$queryRaw`TRUNCATE TABLE "credentials" CASCADE`;
         await client.$queryRaw`TRUNCATE TABLE "users" CASCADE`;
     })
@@ -15,7 +16,6 @@ describe('Testes de Credenciais', () => {
     it('deve criar uma nova credencial com sucesso', async () => {
         const user = await createUserFactory();
         const token = await generateToken(user.id)
-        console.log("token", token)
         const newCredentialResponse = await request(app)
             .post('/credentials/create')
             .set('Authorization', token)
@@ -65,7 +65,7 @@ describe('Testes de Credenciais', () => {
 
         expect(deleteByIdResponse.status).toBe(204);
     });
-/* 
+
     it('deve retornar uma mensagem de erro ao tentar cadastrar uma credencial sem estar logado', async () => {
         const cryptr = new Cryptr(process.env.CRYPTR_SECRET)
         const falseToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI0OTk3YThkYi03NzVlLTQ3ODgtYTUwYS1hZjRiY2NmNmI0NzQiLCJpYXQiOjE3MTU4MDY5MDgsImV4cCI6MTcxNTg5MzMwOH0.ybhK0En5pA2hdStDubrrdWOLpzEvRjqw9FeB-fvvCfY'
@@ -79,10 +79,10 @@ describe('Testes de Credenciais', () => {
                 password: cryptr.encrypt("1234"),
             });
         expect(newCredentialResponse.status).toBe(401);
-        expect(response.body).toEqual({
+        expect(newCredentialResponse.body).toEqual({
             error: 'Unauthorized',
             message: 'Essa requisição contém um token inválido'
         });
-    }); */
+    });
 
 });

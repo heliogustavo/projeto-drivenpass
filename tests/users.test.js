@@ -7,6 +7,7 @@ import { createUserFactory, generateToken } from './factories/factoriesUsers';
 describe('Testes de Controladores', () => {
 
   beforeEach(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 350));
     await client.$queryRaw`TRUNCATE TABLE "users" CASCADE`;
 })
   it('deve criar uma nova conta com sucesso', async () => {
@@ -51,7 +52,7 @@ describe('Testes de Controladores', () => {
     ]);
   });
 
-   /* it('retornar erro 401 para token inválido', async () => {
+     it('retornar erro 401 para token inválido', async () => {
     const user = await createUserFactory();
     const token = await generateToken(user.id)
     const tokenFalso= 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI0OTk3YThkYi03NzVlLTQ3ODgtYTUwYS1hZjRiY2NmNmI0NzQiLCJpYXQiOjE3MTU4MDY5MDgsImV4cCI6MTcxNTg5MzMwOH0.ybhK0En5pA2hdStDubrrdWOLpzEvRjqw9FeB-fvvCfY'
@@ -59,11 +60,10 @@ describe('Testes de Controladores', () => {
     const response = await request(app)
       .get('/users/categories-count')
       .set('Authorization', tokenFalso);
-      console.log("response", response.error)
     expect(response.status).toBe(401);
     expect(response.body).toEqual({
       error: 'Unauthorized',
       message: 'Essa requisição contém um token inválido'
     });
-  });  */
+  });   
 });

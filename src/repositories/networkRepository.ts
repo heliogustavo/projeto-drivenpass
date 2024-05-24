@@ -5,7 +5,6 @@ import { TitlesList } from "../types/usersTypes";
 
 
 export async function insertData (data: IInsertNetwork){
-    console.log(data)
     await client.network.create({
         data: data
     });

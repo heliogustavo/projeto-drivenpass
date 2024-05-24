@@ -8,6 +8,7 @@ import { createNetworkFactory } from './factories/factoriesNetwork';
 
 describe('Testes EndPoints de Networks', () => {
     beforeEach(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 350));
         await client.$queryRaw`TRUNCATE TABLE "networks" CASCADE`;
         await client.$queryRaw`TRUNCATE TABLE "users" CASCADE`;
     })
