@@ -65,7 +65,7 @@ describe('Testes de Credenciais', () => {
 
         expect(deleteByIdResponse.status).toBe(204);
     });
-
+ 
     it('deve retornar uma mensagem de erro ao tentar cadastrar uma credencial sem estar logado', async () => {
         const cryptr = new Cryptr(process.env.CRYPTR_SECRET)
         const falseToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI0OTk3YThkYi03NzVlLTQ3ODgtYTUwYS1hZjRiY2NmNmI0NzQiLCJpYXQiOjE3MTU4MDY5MDgsImV4cCI6MTcxNTg5MzMwOH0.ybhK0En5pA2hdStDubrrdWOLpzEvRjqw9FeB-fvvCfY'
